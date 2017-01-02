@@ -17,7 +17,7 @@ class SportingFixtureService extends Actor with ActorLogging{
      mediator ! Subscribe("sportscontent",self)
 
      def receive = {
-       case fix:SportsFixture => log.info("received a sporting fixture")
+       case fix:SportsFixture => log.info(s"received a sporting fixture $fix")
            ClusterSharding(context.system).shardRegion(SportingFixture.shardName) ! SetFixtureState(fix.id.value, fix)
        case SubscribeAck(Subscribe("content", None, `self`)) => log.info("subscribing to sporting content");
      }
