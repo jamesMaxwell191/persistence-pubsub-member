@@ -40,8 +40,7 @@ object Main {
         extractEntityId = SportingFixture.idExtractor,
         extractShardId = SportingFixture.shardResolver)
         println(s"the region path is ${sportingFixtureRegion.path}")
-       val sportingService = system.actorOf(SportingFixtureService.props,"sportingFixtureService")
-        ClusterClientReceptionist(system).registerService(sportingService)
+      val sportingFixtureService = system.actorOf(SportingFixtureService.props)
     }
     cluster.registerOnMemberRemoved{
         system.registerOnTermination {

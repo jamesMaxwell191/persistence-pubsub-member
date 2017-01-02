@@ -1,4 +1,4 @@
-name := "persistence-cluster-member"
+name := "persistence-pubsub-member"
 
 version := "0.2"
 
