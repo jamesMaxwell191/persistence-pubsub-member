@@ -2,9 +2,9 @@ name := "persistence-pubsub-member"
 
 version := "0.2"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.1"
 
-lazy val akkaVersion = "2.4.16"
+lazy val akkaVersion = "2.4.17"
 
 resolvers ++= Seq("Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
   "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases",
@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence" % akkaVersion,
   "com.typesafe.akka" %% "akka-cluster-sharding" % akkaVersion,
   "com.typesafe.akka" %% "akka-cluster-metrics" % akkaVersion,
-  "com.productfoundry" %% "akka-persistence-couchbase" % "0.4.1",
+  "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.23",
   "com.marcom" %% "sportscommon" % "1.0",
   "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test")

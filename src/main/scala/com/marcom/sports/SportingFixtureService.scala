@@ -18,7 +18,7 @@ class SportingFixtureService extends Actor with ActorLogging{
 
      def receive = {
        case fix:SportsFixture => log.info(s"received a sporting fixture $fix")
-           ClusterSharding(context.system).shardRegion(SportingFixture.shardName) ! SetFixtureState(fix.id.value, fix)
+           ClusterSharding(context.system).shardRegion(SportingFixture.shardName) ! SetFixtureState(fix.id.toString, fix)
        case SubscribeAck(Subscribe("content", None, `self`)) => log.info("subscribing to sporting content");
      }
 }
