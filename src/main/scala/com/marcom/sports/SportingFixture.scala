@@ -8,7 +8,7 @@ import com.marcom.sports.SportingFixture._
 
 class SportingFixture extends PersistentActor with ActorLogging {
 
-  override def persistenceId = self.path.name
+  override def persistenceId = {println(s"persistenceId ${self.path.parent.name}"); self.path.parent.name}
 
   var state:SportsFixture = _
 
@@ -19,10 +19,10 @@ class SportingFixture extends PersistentActor with ActorLogging {
   }
 
   val receiveCommand: Receive = {
-    case SetState(fixture) => log.info(s"setting the fixture state at path ${self.path.name}")
+    case SetState(fixture) => println(s"setting the fixture state at path ${self.path.parent.name}")
             persist(fixture)(updateState)
 
-    case GetState => sender() ! state
+    case GetState => println("replying with state!!!!!"); sender() ! state
   }
 
   def updateState(sportsFixture: SportsFixture): Unit = {
@@ -43,6 +43,8 @@ object SportingFixture {
 
   case object Persisted
 
+  case class CreateFixture(fixture:SportsFixture) extends Cmd
+
   case class SetState(fixture:SportsFixture) extends Cmd
 
   def props = Props[SportingFixture]
@@ -53,7 +55,7 @@ object SportingFixture {
   case class GetFixtureDetails(fixtureId: String)
 
   val idExtractor: ShardRegion.ExtractEntityId = {
-    case SetFixtureState(id, fixture) => (id, SetState(fixture))
+    case SetFixtureState(id, fixture) => println(s"extracting id $id");(id, SetState(fixture))
     case GetFixtureDetails(id) => (id, GetState)
   }
 

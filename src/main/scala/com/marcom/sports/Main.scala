@@ -4,6 +4,7 @@ import akka.actor.ActorSystem
 import akka.cluster.Cluster
 import akka.cluster.client.ClusterClientReceptionist
 import akka.cluster.sharding.{ClusterSharding, ClusterShardingSettings}
+import akka.pattern.{Backoff, BackoffSupervisor}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 
@@ -33,9 +34,17 @@ object Main {
     val system = ActorSystem(systemName,config)
     val cluster = Cluster(system)
     cluster.registerOnMemberUp {
+      val supervisor = BackoffSupervisor.props(
+        Backoff.onStop(
+          SportingFixture.props,
+          childName = "entity",
+          minBackoff = 3.seconds,
+          maxBackoff = 30.seconds,
+          randomFactor = 0.2 // adds 20% "noise" to vary the intervals slightly
+        ))
       val sportingFixtureRegion = ClusterSharding(system).start(
         typeName = SportingFixture.shardName,
-        entityProps = SportingFixture.props,
+        entityProps = supervisor,
         settings = ClusterShardingSettings(system),
         extractEntityId = SportingFixture.idExtractor,
         extractShardId = SportingFixture.shardResolver)
